@@ -2,9 +2,6 @@ package com.chang.nethelp;
 
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.os.Handler;
 import android.os.Message;
 
@@ -22,10 +19,9 @@ public class NetHelp {
 			@Override
 			public void onFinish(String response) {
 				try {
-					JSONObject jsonObject = new JSONObject(response);
-					int flag = jsonObject.getInt("flag");
+					int flag = Integer.parseInt(response);
 					msg.arg1 = flag;
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					msg.arg1 = -1;
 					e.printStackTrace();
 				}

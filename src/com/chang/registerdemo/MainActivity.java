@@ -1,10 +1,9 @@
-package com.chang.registerdemo;
+ package com.chang.registerdemo;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.chang.nethelp.NetHelp;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +22,7 @@ public class MainActivity extends Activity {
 	/**
 	 * 用于处理checkLogin()方法与服务器交互的返回值
 	 */
+	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.arg1) {
@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_login);
 		this.username = (EditText) findViewById(R.id.username);
 		this.userpwd = (EditText) findViewById(R.id.userpwd);
 		this.login = (Button) findViewById(R.id.login);

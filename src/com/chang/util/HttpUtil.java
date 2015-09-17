@@ -17,18 +17,17 @@ public class HttpUtil {
 				try {
 					URL url = new URL(address);
 					connection = (HttpURLConnection) url.openConnection();
+					connection.setDoInput(true);
+					connection.setConnectTimeout(8000);
 					if (map == null) {
 						connection.setRequestMethod("GET");
 					} else {
+						connection.setDoOutput(true);
 						connection.setRequestMethod("POST");
-						DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-						String parameter = "username=" + map.get("username") + "&userpwd=" + map.get("userpwd");
-						out.writeBytes(parameter);
+						 //获得输出流，向服务器写入数据
+			            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+			            out.writeBytes(getRequestData(map));
 					}
-					connection.setConnectTimeout(8000);
-					connection.setReadTimeout(8000);
-					connection.setDoInput(true);
-					connection.setDoOutput(true);
 					InputStream in = connection.getInputStream();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 					StringBuilder response = new StringBuilder();
@@ -41,6 +40,7 @@ public class HttpUtil {
 						listener.onFinish(response.toString());
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 					if (listener != null) {
 						// 回调onError()方法
 						listener.onError(e);
@@ -53,6 +53,26 @@ public class HttpUtil {
 			}
 		}).start();
 	}
+	
+	 /*
+     * Function  :   封装请求体信息
+     * Param     :   params请求体内容，encode编码格式
+     */
+   public static String getRequestData(Map<String, String> params) {
+      StringBuffer stringBuffer = new StringBuffer();        //存储封装好的请求体信息
+      try {
+            for(Map.Entry<String, String> entry : params.entrySet()) {
+                stringBuffer.append(entry.getKey())
+                      .append("=")
+                      .append(entry.getValue())
+                      .append("&");
+            }
+           stringBuffer.deleteCharAt(stringBuffer.length() - 1);    //删除最后的一个"&"
+        } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return stringBuffer.toString();
+    }
 
 	public interface HttpCallbackListener {
 
